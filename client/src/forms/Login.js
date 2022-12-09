@@ -73,7 +73,7 @@ const Login = () => {
           Don't have an account? <Link to="/register">Sign Up</Link>
         </p>
       </section>
-      {isAuth && <Navigate to="/home" />}
+      {isAuth && <Navigate to="/" />}
     </>
   );
 };

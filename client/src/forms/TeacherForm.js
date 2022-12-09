@@ -1,5 +1,7 @@
+import axios from "axios";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import { useApp } from "../contexts/AppContext";
 
 const TeacherForm = () => {
   const [formData, setFormData] = useState({
@@ -11,73 +13,100 @@ const TeacherForm = () => {
     Class: "",
   });
 
+  let key = false;
+  const { isAuth, setTeacherData } = useApp();
   const { name, phoneNum, subject, address, Class } = formData;
 
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
+
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+        "x-auth-token": isAuth,
+      },
+    };
+    const cur = { name, phoneNum, subject, address, Class };
+    const body = JSON.stringify(cur);
+    try {
+      console.log("calling api ..", isAuth);
+      let resp = await axios.post(
+        "http://localhost:5000/api/teachers",
+        body,
+        config
+      );
+      console.log(resp.data);
+      key = true;
+      setTeacherData(resp.data);
+    } catch (err) {
+      console.log("err in submission ", err);
+    }
   };
 
   return (
-    <section className="container">
-      <h1 className="large my-3">Teachers Form </h1>
+    <>
+      <section className="container">
+        <h1 className="large my-3">Teachers Form </h1>
 
-      <form className="form" onSubmit={onSubmit}>
-        <div className="form-group">
-          <input
-            className="form-control"
-            type="text"
-            placeholder="Name "
-            name="name"
-            value={name}
-            onChange={onChange}
-          />
-        </div>
-        <div className="form-group">
-          <input
-            className="form-control"
-            type="text"
-            placeholder="subject "
-            name="subject"
-            value={subject}
-            onChange={onChange}
-          />
-        </div>
-        <div className="form-group">
-          <input
-            className="form-control"
-            type="number"
-            placeholder="phoneNum "
-            name="phoneNum"
-            value={phoneNum}
-            onChange={onChange}
-          />
-        </div>
-        <div className="form-group">
-          <input
-            className="form-control"
-            type="text"
-            placeholder="address "
-            name="address"
-            value={address}
-            onChange={onChange}
-          />
-        </div>
-        <div className="form-group">
-          <input
-            className="form-control"
-            type="text"
-            placeholder="Class "
-            name="Class"
-            value={Class}
-            onChange={onChange}
-          />
-        </div>
-        <input type="submit" className="btn btn-primary" value="submit" />
-      </form>
-    </section>
+        <form className="form" onSubmit={onSubmit}>
+          <div className="form-group">
+            <input
+              className="form-control"
+              type="text"
+              placeholder="Name "
+              name="name"
+              value={name}
+              onChange={onChange}
+            />
+          </div>
+          <div className="form-group">
+            <input
+              className="form-control"
+              type="text"
+              placeholder="subject "
+              name="subject"
+              value={subject}
+              onChange={onChange}
+            />
+          </div>
+          <div className="form-group">
+            <input
+              className="form-control"
+              type="number"
+              placeholder="phoneNum "
+              name="phoneNum"
+              value={phoneNum}
+              onChange={onChange}
+            />
+          </div>
+          <div className="form-group">
+            <input
+              className="form-control"
+              type="text"
+              placeholder="address "
+              name="address"
+              value={address}
+              onChange={onChange}
+            />
+          </div>
+          <div className="form-group">
+            <input
+              className="form-control"
+              type="text"
+              placeholder="Class "
+              name="Class"
+              value={Class}
+              onChange={onChange}
+            />
+          </div>
+          <input type="submit" className="btn btn-primary" value="submit" />
+        </form>
+      </section>
+      {key && <Navigate to="/students" />}
+    </>
   );
 };
 

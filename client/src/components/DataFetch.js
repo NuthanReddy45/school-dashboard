@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
-import axios from "axios";
+// import React, { useEffect } from "react";
+// import axios from "axios";
 
-import { useApp } from "../contexts/AppContext";
+// import { useApp } from "../contexts/AppContext";
 
-const DataFetch = () => {
-  const { isAuth, setStudentData, setTeacherData } = useApp();
+// const DataFetch = () => {
+//   const { isAuth, setStudentData, setTeacherData } = useApp();
 
-  return <div>DataFetch</div>;
-};
+//   return <div>DataFetch</div>;
+// };
 
-export default DataFetch;
+// export default DataFetch;

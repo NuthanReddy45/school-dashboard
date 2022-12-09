@@ -28,7 +28,8 @@ router.post("/", auth, async (req, res) => {
 
   try {
     await cur.save();
-    return res.status(200).send("gg boi");
+    let resp = await Teacher.find();
+    return res.json(resp);
   } catch (err) {
     console.log("error posting  teachers ", err);
     return res.status(500).send("error in posting teachers");

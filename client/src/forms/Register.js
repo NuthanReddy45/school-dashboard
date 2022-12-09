@@ -41,10 +41,6 @@ const Register = () => {
     }
   };
 
-  // if (isAuthenticated) {
-  //   return <Navigate to="/dashboard" />;
-  // }
-
   return (
     <>
       <section className="container">
@@ -96,7 +92,7 @@ const Register = () => {
         </p>
       </section>
 
-      {isAuth && <Navigate to="/home" />}
+      {isAuth && <Navigate to="/" />}
     </>
   );
 };

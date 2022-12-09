@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useContext, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useApp } from "../../contexts/AppContext";
 import Dashboard from "../layouts/Dashboard";
 
@@ -30,11 +31,14 @@ const Teacher = () => {
   }, []);
 
   return (
-    <div className="text-center" style={{ margin: "10px auto" }}>
-      {TeacherData.map((data) => {
-        return <Dashboard {...data} key={data._id} />;
-      })}
-    </div>
+    <>
+      <div className="text-center" style={{ margin: "10px auto" }}>
+        {TeacherData.map((data) => {
+          return <Dashboard {...data} key={data._id} />;
+        })}
+      </div>
+      <Link to="/teachersform"> Add Data </Link>
+    </>
   );
 };
 

@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useContext, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useApp } from "../../contexts/AppContext";
 import Dashboard from "../layouts/Dashboard";
 
@@ -34,6 +35,7 @@ const Student = () => {
       {StudentData.map((data) => {
         return <Dashboard {...data} key={data._id} />;
       })}
+      <Link to="/studentsform"> Add Data </Link>
     </>
   );
 };
