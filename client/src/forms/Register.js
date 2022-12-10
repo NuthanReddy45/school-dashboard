@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
 import { useApp } from "../contexts/AppContext";
+import Alert from "../components/layouts/Alert";
 
 const Register = () => {
   const { isAuth, setisAuth } = useApp();
+  const [Error, setError] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -20,8 +22,8 @@ const Register = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     if (password !== password2) {
-      console.log("nope..");
-      <div className={`alert alert-danger`}>Passwords do not match</div>;
+      console.log("didnt match");
+      setError([{ msg: "Passwords do not match", type: "danger" }]);
     } else {
       const config = {
         headers: {
@@ -32,10 +34,14 @@ const Register = () => {
       const body = JSON.stringify(cur);
       try {
         let resp = await axios.post("/api/auth/register", body, config);
+        setError([{ msg: "User Registered Successfully ", type: "success" }]);
         setisAuth(resp.data.token);
         console.log(resp.data);
-        // <Navigate to="/" replace />;
       } catch (err) {
+        const msg = err.response.data.errors;
+        console.log("here ", msg);
+        const type = "danger";
+        setError([...msg, type]);
         console.log("eror in register", err);
       }
     }
@@ -43,6 +49,14 @@ const Register = () => {
 
   return (
     <>
+      {Error &&
+        // setTimeout(() => {
+        //   setMsg(null);
+        // }, 5000)
+
+        Error.map((cur) => {
+          return <Alert {...cur} id={Math.floor(Math.random() * 100)} />;
+        })}
       <section className="container">
         <h1 className="large text-primary">Sign Up</h1>
         <p className="lead">

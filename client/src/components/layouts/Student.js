@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useApp } from "../../contexts/AppContext";
 import Dashboard from "../layouts/Dashboard";
 
@@ -20,7 +20,7 @@ const Student = () => {
           "http://localhost:5000/api/students",
           config
         );
-        console.log("stu data =  ", resp);
+        console.log("stu data =  ", resp.data);
         setStudentData(resp.data);
       } catch (err) {
         console.log("data fetching failed", err);
@@ -31,12 +31,19 @@ const Student = () => {
   }, []);
 
   return (
-    <>
+    <div style={{ width: "80%", margin: "20px auto" }}>
+      <Link className="text-white" to="/studentsform">
+        <button className="btn btn-primary my-4" style={{ width: "100%" }}>
+          {" "}
+          Add Data{" "}
+        </button>
+      </Link>
       {StudentData.map((data) => {
         return <Dashboard {...data} key={data._id} />;
       })}
-      <Link to="/studentsform"> Add Data </Link>
-    </>
+
+      {!isAuth && <Navigate to="/" />}
+    </div>
   );
 };
 

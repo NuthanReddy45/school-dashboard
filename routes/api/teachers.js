@@ -1,4 +1,5 @@
 const express = require("express");
+const { check, validationResult } = require("express-validator");
 const auth = require("../../middleware/auth");
 
 const Teacher = require("../../models/teachers");
@@ -15,26 +16,42 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-router.post("/", auth, async (req, res) => {
-  const { name, subject, phoneNum, address, Class } = req.body;
+router.post(
+  "/",
+  [
+    check("name", "Please include a name").notEmpty(),
+    check("subject", "Please include a Subject").notEmpty(),
+    check("phoneNum", "Please include a Phone Number").notEmpty(),
+    check("address", "Please include a Adress").notEmpty(),
+    check("Class", "Please include a Class Array").notEmpty(),
+    auth,
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
 
-  const cur = new Teacher({
-    name,
-    subject,
-    phoneNum,
-    address,
-    Class,
-  });
+    const { name, subject, phoneNum, address, Class } = req.body;
 
-  try {
-    await cur.save();
-    let resp = await Teacher.find();
-    return res.json(resp);
-  } catch (err) {
-    console.log("error posting  teachers ", err);
-    return res.status(500).send("error in posting teachers");
+    const cur = new Teacher({
+      name,
+      subject,
+      phoneNum,
+      address,
+      Class,
+    });
+
+    try {
+      await cur.save();
+      let resp = await Teacher.find();
+      return res.json(resp);
+    } catch (err) {
+      console.log("error posting  teachers ", err);
+      return res.status(500).send("error in posting teachers");
+    }
   }
-});
+);
 
 router.post("/:id", auth, async (req, res) => {
   const { name, subject, phoneNum, address, Class } = req.body;
@@ -74,7 +91,8 @@ router.delete("/:id", auth, async (req, res) => {
       return res.status(400).send("No User Found ");
     }
     await resp.remove();
-    return res.status(200).send("Succesfully deleted the user");
+    resp = await Teacher.find();
+    return res.json(resp);
   } catch (err) {
     console.log("error deleting teachers ", err);
     return res.status(500).send("error in deleting teachers");

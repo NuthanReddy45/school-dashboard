@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const students = require("../../models/students");
 
 const Student = require("../../models/students");
+const { check, validationResult } = require("express-validator");
 
 router.get("/", auth, async (req, res) => {
   try {
@@ -16,26 +17,43 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-router.post("/", auth, async (req, res) => {
-  const { name, rollNum, fatherName, phoneNum, address, Class } = req.body;
-  const temp = {
-    name: name ? name : "",
-    rollNum: rollNum ? rollNum : "",
-    fatherName: fatherName ? fatherName : "",
-    phoneNum: phoneNum ? phoneNum : "",
-    address: address ? address : "",
-    Class: Class ? Class : "",
-  };
+router.post(
+  "/",
+  [
+    check("name", "Please include a name").notEmpty(),
+    check("rollNum", "Please include a Roll Number").notEmpty(),
+    check("fatherName", "Please include a Father Name").notEmpty(),
+    check("phoneNum", "Please include a Phone Number").notEmpty(),
+    check("address", "Please include a Adress").notEmpty(),
+    check("Class", "Please include a Class type").notEmpty(),
+    auth,
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
 
-  try {
-    const cur = new Student(temp);
-    await cur.save();
-    return res.json(cur);
-  } catch (err) {
-    console.log("error aading  students ", err);
-    return res.status(500).send("error in adding students");
+    const { name, rollNum, fatherName, phoneNum, address, Class } = req.body;
+    const temp = {
+      name: name ? name : "",
+      rollNum: rollNum ? rollNum : "",
+      fatherName: fatherName ? fatherName : "",
+      phoneNum: phoneNum ? phoneNum : "",
+      address: address ? address : "",
+      Class: Class ? Class : "",
+    };
+
+    try {
+      const cur = new Student(temp);
+      await cur.save();
+      return res.json(cur);
+    } catch (err) {
+      console.log("error aading  students ", err);
+      return res.status(500).send("error in adding students");
+    }
   }
-});
+);
 router.post("/:id", auth, async (req, res) => {
   const { name, rollNum, fatherName, phoneNum, address, Class } = req.body;
   const temp = {};
@@ -78,7 +96,8 @@ router.delete("/:id", auth, async (req, res) => {
       return res.status(400).send("No User Found ");
     }
     await resp.remove();
-    return res.status(200).send("Succesfully deleted the user");
+    resp = await Student.find();
+    return res.json(resp);
   } catch (err) {
     console.log("error deleting students ", err);
     return res.status(500).send("error in deleting students");

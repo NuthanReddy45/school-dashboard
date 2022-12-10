@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
+import Alert from "../components/layouts/Alert";
 import { useApp } from "../contexts/AppContext";
 
 const TeacherForm = () => {
@@ -13,7 +14,8 @@ const TeacherForm = () => {
     Class: "",
   });
 
-  let key = false;
+  const [Key, setKey] = useState(false);
+  const [Msg, setMsg] = useState(null);
   const { isAuth, setTeacherData } = useApp();
   const { name, phoneNum, subject, address, Class } = formData;
 
@@ -39,15 +41,25 @@ const TeacherForm = () => {
         config
       );
       console.log(resp.data);
-      key = true;
+      setKey(true);
       setTeacherData(resp.data);
     } catch (err) {
+      const msg = err.response.data.errors;
+      setMsg([...msg]);
       console.log("err in submission ", err);
     }
   };
 
   return (
     <>
+      {Msg &&
+        // setTimeout(() => {
+        //   setMsg(null);
+        // }, 5000)
+
+        Msg.map((cur) => {
+          return <Alert {...cur} id={Math.floor(Math.random() * 100)} />;
+        })}
       <section className="container">
         <h1 className="large my-3">Teachers Form </h1>
 
@@ -105,7 +117,8 @@ const TeacherForm = () => {
           <input type="submit" className="btn btn-primary" value="submit" />
         </form>
       </section>
-      {key && <Navigate to="/students" />}
+      {Key && <Navigate to="/teachers" />}
+      {!isAuth && <Navigate to="/" />}
     </>
   );
 };

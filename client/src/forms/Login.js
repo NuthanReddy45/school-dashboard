@@ -2,9 +2,12 @@ import React, { useState, useContext } from "react";
 import { Link, Navigate, redirect } from "react-router-dom";
 import axios from "axios";
 import { useApp } from "../contexts/AppContext";
+import Alert from "../components/layouts/Alert";
 
 const Login = () => {
   const { isAuth, setisAuth } = useApp();
+
+  const [Msg, setMsg] = useState(null);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -36,12 +39,23 @@ const Login = () => {
       localStorage.setItem("token", resp.data.token);
       setisAuth(resp.data.token);
     } catch (err) {
-      console.log("eror in register", err);
+      const msg = err.response.data.errors;
+      setMsg([...msg]);
+      console.log("eror in register", err.response.data.errors);
     }
   };
 
   return (
     <>
+      {Msg &&
+        // setTimeout(() => {
+        //   setMsg(null);
+        // }, 5000)
+
+        Msg.map((cur) => {
+          return <Alert {...cur} id={Math.floor(Math.random() * 100)} />;
+        })}
+
       <section className="container">
         <h1 className="large my-3">Sign In</h1>
 

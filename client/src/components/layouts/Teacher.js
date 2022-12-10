@@ -1,8 +1,9 @@
 import axios from "axios";
 import React, { useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useApp } from "../../contexts/AppContext";
 import Dashboard from "../layouts/Dashboard";
+import TDashboard from "./TDashboard";
 
 const Teacher = () => {
   const { TeacherData, setTeacherData, isAuth } = useApp();
@@ -32,12 +33,18 @@ const Teacher = () => {
 
   return (
     <>
-      <div className="text-center" style={{ margin: "10px auto" }}>
+      <div style={{ width: "80%", margin: "20px auto" }}>
+        <Link className="text-white" to="/teachersform">
+          <button className="btn btn-primary my-4" style={{ width: "100%" }}>
+            {" "}
+            Add Data{" "}
+          </button>
+        </Link>
         {TeacherData.map((data) => {
-          return <Dashboard {...data} key={data._id} />;
+          return <TDashboard {...data} key={data._id} />;
         })}
       </div>
-      <Link to="/teachersform"> Add Data </Link>
+      {!isAuth && <Navigate to="/" />}
     </>
   );
 };

@@ -1,18 +1,9 @@
 import axios from "axios";
 import React, { Fragment } from "react";
 import { useApp } from "../../contexts/AppContext";
-import Alert from "./Alert";
 
-const Dashboard = ({
-  name,
-  _id,
-  rollNum,
-  fatherName,
-  address,
-  Class,
-  phoneNum,
-}) => {
-  const { setStudentData, isAuth } = useApp();
+const TDashboard = ({ name, _id, subject, address, Class, phoneNum }) => {
+  const { setTeacherData, isAuth } = useApp();
 
   const DeleteItem = async () => {
     const config = {
@@ -24,12 +15,11 @@ const Dashboard = ({
     try {
       console.log("calling api ..", isAuth);
       let resp = await axios.delete(
-        `http://localhost:5000/api/students/${_id}`,
+        `http://localhost:5000/api/teachers/${_id}`,
         config
       );
-      <Alert msg="User deleted succesfully" type="success" />;
       console.log("result = ", resp.data);
-      setStudentData(resp.data);
+      setTeacherData(resp.data);
     } catch (err) {
       console.log("error deleting ", err);
     }
@@ -41,18 +31,15 @@ const Dashboard = ({
         <div className="card-body">
           <h4 className="card-title">{name}</h4>
           <p className="card-text">
-            {rollNum && <small className="text-muted">{rollNum}</small>}
-            {fatherName && <small className="text-muted">{fatherName}</small>}
+            {subject && <small className="text-muted">{subject}</small>}
           </p>
-          ~
           <p className="card-text">
             {address} {phoneNum}
           </p>
           <div>
-            {Class}
-            {/* {typeof Class === "number"
-              ? Class
-              : Class.map((i, idx) => <span key={idx}>{i}</span>)} */}
+            {Class.map((i, idx) => (
+              <span key={idx}>{i}</span>
+            ))}
           </div>
         </div>
       </div>
@@ -63,4 +50,4 @@ const Dashboard = ({
   );
 };
 
-export default Dashboard;
+export default TDashboard;
