@@ -1,7 +1,6 @@
 import React from "react";
 
 const Alert = ({ msg, type, id }) => {
-  console.log("msg ", msg);
   if (!type) type = "danger";
   if (!msg) return;
   return (

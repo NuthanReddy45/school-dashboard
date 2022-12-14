@@ -29,13 +29,11 @@ const Login = () => {
     const cur = { email, password };
     const body = JSON.stringify(cur);
     try {
-      console.log("calling api ..", isAuth);
       let resp = await axios.post(
         "http://localhost:5000/api/auth/login",
         body,
         config
       );
-      console.log(resp.data.token);
       localStorage.setItem("token", resp.data.token);
       setisAuth(resp.data.token);
     } catch (err) {

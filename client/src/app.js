@@ -17,7 +17,6 @@ const App = () => {
     <AppContextProvider>
       <div className="main">
         <BrowserRouter>
-          {console.log("render")}
           <Navbar />
           <div style={{ flex: 1, width: "100%" }}>
             <Routes>

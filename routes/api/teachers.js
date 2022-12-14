@@ -75,7 +75,6 @@ router.post("/:id", auth, async (req, res) => {
       );
       return res.json(response);
     }
-    console.log("not found");
     return res.send("bad request").status(400);
   } catch (err) {
     console.log("error posting  teachers ", err);

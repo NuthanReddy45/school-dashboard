@@ -21,7 +21,7 @@ const NavBar = () => {
         href="/"
         className="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none"
       >
-        <span className="fs-2">School Dashboard</span>
+        <span className="fs-2 navbar-brand">School Dashboard</span>
       </a>
       <div />
       <ul className="nav nav-pills">

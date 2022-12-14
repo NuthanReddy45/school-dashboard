@@ -40,7 +40,6 @@ const TeacherForm = () => {
         body,
         config
       );
-      console.log(resp.data);
       setKey(true);
       setTeacherData(resp.data);
     } catch (err) {
@@ -117,6 +116,7 @@ const TeacherForm = () => {
           <input type="submit" className="btn btn-primary" value="submit" />
         </form>
       </section>
+      {/* {Key && setType("Added")} */}
       {Key && <Navigate to="/teachers" />}
       {!isAuth && <Navigate to="/" />}
     </>

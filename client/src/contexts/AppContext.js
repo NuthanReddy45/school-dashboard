@@ -4,6 +4,7 @@ export const AppContext = createContext(null);
 export const useApp = () => useContext(AppContext);
 const AppContextProvider = ({ children }) => {
   const [isAuth, setisAuth] = useState(localStorage.getItem("token"));
+  const [Type, setType] = useState(null);
   const [StudentData, setStudentData] = useState([]);
   const [TeacherData, setTeacherData] = useState([]);
 
@@ -18,6 +19,8 @@ const AppContextProvider = ({ children }) => {
     <AppContext.Provider
       value={{
         isAuth,
+        Type,
+        setType,
         setisAuth,
         StudentData,
         setStudentData,

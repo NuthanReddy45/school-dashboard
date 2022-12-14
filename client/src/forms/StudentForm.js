@@ -18,7 +18,7 @@ const StudentForm = () => {
 
   const [Msg, setMsg] = useState(null);
 
-  const { isAuth, setStudentData } = useApp();
+  const { isAuth, setStudentData, setType } = useApp();
 
   const { name, rollNum, phoneNum, fatherName, address, Class } = formData;
 
@@ -42,7 +42,6 @@ const StudentForm = () => {
         body,
         config
       );
-      console.log(resp.data);
       setKey(true);
     } catch (err) {
       const msg = err.response.data.errors;
@@ -54,10 +53,6 @@ const StudentForm = () => {
   return (
     <>
       {Msg &&
-        // setTimeout(() => {
-        //   setMsg(null);
-        // }, 5000)
-
         Msg.map((cur) => {
           return <Alert {...cur} id={Math.floor(Math.random() * 100)} />;
         })}
@@ -128,6 +123,7 @@ const StudentForm = () => {
           <input type="submit" className="btn btn-primary" value="Submit" />
         </form>
       </section>
+      {Key && setType("Added")}
       {Key && <Navigate to="/students" />}
       {!isAuth && <Navigate to="/" />}
     </>

@@ -22,7 +22,6 @@ const Register = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     if (password !== password2) {
-      console.log("didnt match");
       setError([{ msg: "Passwords do not match", type: "danger" }]);
     } else {
       const config = {
@@ -36,10 +35,8 @@ const Register = () => {
         let resp = await axios.post("/api/auth/register", body, config);
         setError([{ msg: "User Registered Successfully ", type: "success" }]);
         setisAuth(resp.data.token);
-        console.log(resp.data);
       } catch (err) {
         const msg = err.response.data.errors;
-        console.log("here ", msg);
         const type = "danger";
         setError([...msg, type]);
         console.log("eror in register", err);

@@ -1,7 +1,6 @@
 import axios from "axios";
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { useApp } from "../../contexts/AppContext";
-import Alert from "./Alert";
 
 const Dashboard = ({
   name,
@@ -12,7 +11,9 @@ const Dashboard = ({
   Class,
   phoneNum,
 }) => {
-  const { setStudentData, isAuth } = useApp();
+  const { setStudentData, isAuth, setType } = useApp();
+
+  const [Key, setKey] = useState(null);
 
   const DeleteItem = async () => {
     const config = {
@@ -22,18 +23,18 @@ const Dashboard = ({
       },
     };
     try {
-      console.log("calling api ..", isAuth);
       let resp = await axios.delete(
         `http://localhost:5000/api/students/${_id}`,
         config
       );
-      <Alert msg="User deleted succesfully" type="success" />;
-      console.log("result = ", resp.data);
+      setKey(true);
       setStudentData(resp.data);
     } catch (err) {
       console.log("error deleting ", err);
     }
   };
+
+  const EditItem = () => {};
 
   return (
     <div className="card mb-3 px-3" style={{ width: "100%" }}>
@@ -44,21 +45,16 @@ const Dashboard = ({
             {rollNum && <small className="text-muted">{rollNum}</small>}
             {fatherName && <small className="text-muted">{fatherName}</small>}
           </p>
-          ~
           <p className="card-text">
             {address} {phoneNum}
           </p>
-          <div>
-            {Class}
-            {/* {typeof Class === "number"
-              ? Class
-              : Class.map((i, idx) => <span key={idx}>{i}</span>)} */}
-          </div>
+          <div>{Class}</div>
         </div>
       </div>
-      <button className="btn btn-primary m-3" onClick={DeleteItem}>
+      <button className="btn btn-danger" onClick={DeleteItem}>
         Delete
       </button>
+      {Key && setType("Deleted")}
     </div>
   );
 };

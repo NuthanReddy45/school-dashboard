@@ -5,8 +5,6 @@ import { useApp } from "../../contexts/AppContext";
 const Landing = () => {
   const { isAuth } = useApp();
 
-  console.log("landing");
-
   return (
     <div className="bg" style={{ backgroundColor: "transparent" }}>
       <div className="dark-overlay">

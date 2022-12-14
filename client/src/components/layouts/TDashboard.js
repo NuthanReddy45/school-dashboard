@@ -13,12 +13,10 @@ const TDashboard = ({ name, _id, subject, address, Class, phoneNum }) => {
       },
     };
     try {
-      console.log("calling api ..", isAuth);
       let resp = await axios.delete(
         `http://localhost:5000/api/teachers/${_id}`,
         config
       );
-      console.log("result = ", resp.data);
       setTeacherData(resp.data);
     } catch (err) {
       console.log("error deleting ", err);
@@ -43,7 +41,7 @@ const TDashboard = ({ name, _id, subject, address, Class, phoneNum }) => {
           </div>
         </div>
       </div>
-      <button className="btn btn-primary m-3" onClick={DeleteItem}>
+      <button className="btn btn-danger m-3" onClick={DeleteItem}>
         Delete
       </button>
     </div>
