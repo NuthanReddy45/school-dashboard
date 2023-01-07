@@ -1,12 +1,15 @@
 import axios from "axios";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useApp } from "../../contexts/AppContext";
+import { Paginate } from "../Paginate";
 
 import TDashboard from "./TDashboard";
 
 const Teacher = () => {
   const { TeacherData, setTeacherData, isAuth } = useApp();
+  const [currentPage, setcurrentPage] = useState(1);
+  const [postsPerPage, setpostsPerPage] = useState(2);
 
   useEffect(() => {
     const fun = async () => {
@@ -29,6 +32,15 @@ const Teacher = () => {
     fun();
   }, []);
 
+  const endIndex = currentPage * postsPerPage;
+  const startIndex = endIndex - postsPerPage;
+
+  const curData = TeacherData.slice(startIndex, endIndex);
+
+  const paginate = (props) => {
+    setcurrentPage(props);
+  };
+
   return (
     <>
       <div style={{ width: "80%", margin: "20px auto" }}>
@@ -38,9 +50,14 @@ const Teacher = () => {
             Add Data{" "}
           </button>
         </Link>
-        {TeacherData.map((data) => {
+        {curData.map((data) => {
           return <TDashboard {...data} key={data._id} />;
         })}
+        <Paginate
+          postsPerPage={postsPerPage}
+          TotalPosts={TeacherData.length}
+          paginate={paginate}
+        />
       </div>
       {!isAuth && <Navigate to="/" />}
     </>
