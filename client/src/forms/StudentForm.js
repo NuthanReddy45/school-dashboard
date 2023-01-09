@@ -1,8 +1,9 @@
-import axios from "axios";
+import axios, { Axios } from "axios";
 import React, { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Form, Link, Navigate } from "react-router-dom";
 import Alert from "../components/layouts/Alert";
 import { useApp } from "../contexts/AppContext";
+import { image } from "cloudinary-react";
 
 const StudentForm = () => {
   const [formData, setFormData] = useState({
@@ -15,13 +16,10 @@ const StudentForm = () => {
   });
 
   const [Key, setKey] = useState(false);
-
+  const [fileUrl, setfileUrl] = useState("");
   const [Msg, setMsg] = useState(null);
-
   const { isAuth, setStudentData, setType } = useApp();
-
   const { name, rollNum, phoneNum, fatherName, address, Class } = formData;
-
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -33,7 +31,15 @@ const StudentForm = () => {
         "x-auth-token": isAuth,
       },
     };
-    const cur = { name, phoneNum, fatherName, rollNum, address, Class };
+    const cur = {
+      name,
+      phoneNum,
+      fatherName,
+      rollNum,
+      address,
+      Class,
+      fileUrl,
+    };
     const body = JSON.stringify(cur);
     try {
       console.log("calling api ..", isAuth);
@@ -50,15 +56,38 @@ const StudentForm = () => {
     }
   };
 
+  const uploadImage = ({ file }) => {
+    if (!file) {
+      return Alert("Please select a File ", "danger");
+    }
+    const curData = new FormData();
+    curData.append("file", file);
+    curData.append("upload_preset", "varaprasad");
+    try {
+      const GetLink = async () => {
+        let resp = await axios.post(
+          "https://api.cloudinary.com/v1_1/dsxylh1z6/image/upload",
+          curData
+        );
+        const temp = resp["data"]["secure_url"];
+        console.log("succes uploading ", temp);
+        setfileUrl(temp);
+        console.log("in form in upload ", fileUrl);
+      };
+      GetLink();
+    } catch (err) {
+      console.log("err in image upload", err);
+    }
+  };
+
   return (
     <>
       {Msg &&
         Msg.map((cur) => {
-          return <Alert {...cur} id={Math.floor(Math.random() * 100)} />;
+          return <Alert {...cur} key={Math.floor(Math.random() * 100)} />;
         })}
       <section className="container">
         <h1 className="large text-primary">Students Form </h1>
-
         <form className="form" onSubmit={onSubmit}>
           <div className="form-group">
             <input
@@ -120,6 +149,18 @@ const StudentForm = () => {
               onChange={onChange}
             />
           </div>
+
+          <div>
+            <input
+              type="file"
+              name="file"
+              onChange={(e) => {
+                uploadImage({ file: e.target.files[0] });
+              }}
+            />
+          </div>
+          <br></br>
+
           <input type="submit" className="btn btn-primary" value="Submit" />
         </form>
       </section>

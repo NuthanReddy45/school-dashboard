@@ -23,6 +23,9 @@ const TeacherSchema = new mongoose.Schema({
     type: Array,
     required: true,
   },
+  ImageUrl: {
+    type: String,
+  },
 });
 
 module.exports = Teacher = mongoose.model("Teacher", TeacherSchema);

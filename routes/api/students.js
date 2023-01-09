@@ -26,15 +26,19 @@ router.post(
     check("phoneNum", "Please include a Phone Number").notEmpty(),
     check("address", "Please include a Adress").notEmpty(),
     check("Class", "Please include a Class type").notEmpty(),
+    check("fileUrl", "Please include a Image").notEmpty(),
     auth,
   ],
   async (req, res) => {
+    console.log("in api  0");
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { name, rollNum, fatherName, phoneNum, address, Class } = req.body;
+    const { name, rollNum, fatherName, phoneNum, address, Class, fileUrl } =
+      req.body;
+    console.log("in api  ", fileUrl);
     const temp = {
       name: name ? name : "",
       rollNum: rollNum ? rollNum : "",
@@ -42,9 +46,11 @@ router.post(
       phoneNum: phoneNum ? phoneNum : "",
       address: address ? address : "",
       Class: Class ? Class : "",
+      ImageUrl: fileUrl ? fileUrl : "",
     };
 
     try {
+      console.log(temp);
       const cur = new Student(temp);
       await cur.save();
       return res.json(cur);

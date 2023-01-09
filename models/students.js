@@ -27,6 +27,9 @@ const StudentSchema = new mongoose.Schema({
     type: Number,
     // required: true,
   },
+  ImageUrl: {
+    type: String,
+  },
 });
 
 module.exports = Student = mongoose.model("Student", StudentSchema);

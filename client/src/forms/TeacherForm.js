@@ -16,6 +16,7 @@ const TeacherForm = () => {
 
   const [Key, setKey] = useState(false);
   const [Msg, setMsg] = useState(null);
+  const [fileUrl, setfileUrl] = useState("");
   const { isAuth, setTeacherData } = useApp();
   const { name, phoneNum, subject, address, Class } = formData;
 
@@ -31,7 +32,7 @@ const TeacherForm = () => {
         "x-auth-token": isAuth,
       },
     };
-    const cur = { name, phoneNum, subject, address, Class };
+    const cur = { name, phoneNum, subject, address, Class, fileUrl };
     const body = JSON.stringify(cur);
     try {
       console.log("calling api ..", isAuth);
@@ -46,6 +47,30 @@ const TeacherForm = () => {
       const msg = err.response.data.errors;
       setMsg([...msg]);
       console.log("err in submission ", err);
+    }
+  };
+
+  const uploadImage = ({ file }) => {
+    if (!file) {
+      return Alert("Please select a File ", "danger");
+    }
+    const curData = new FormData();
+    curData.append("file", file);
+    curData.append("upload_preset", "varaprasad");
+    try {
+      const GetLink = async () => {
+        let resp = await axios.post(
+          "https://api.cloudinary.com/v1_1/dsxylh1z6/image/upload",
+          curData
+        );
+        const temp = resp["data"]["secure_url"];
+        console.log("succes uploading ", temp);
+        setfileUrl(temp);
+        console.log("in form in upload ", fileUrl);
+      };
+      GetLink();
+    } catch (err) {
+      console.log("err in image upload", err);
     }
   };
 
@@ -113,6 +138,16 @@ const TeacherForm = () => {
               onChange={onChange}
             />
           </div>
+          <div>
+            <input
+              type="file"
+              name="file"
+              onChange={(e) => {
+                uploadImage({ file: e.target.files[0] });
+              }}
+            />
+          </div>
+          <br></br>
           <input type="submit" className="btn btn-primary" value="submit" />
         </form>
       </section>

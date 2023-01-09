@@ -24,6 +24,7 @@ router.post(
     check("phoneNum", "Please include a Phone Number").notEmpty(),
     check("address", "Please include a Adress").notEmpty(),
     check("Class", "Please include a Class Array").notEmpty(),
+    check("fileUrl", "Please include a Image").notEmpty(),
     auth,
   ],
   async (req, res) => {
@@ -32,7 +33,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { name, subject, phoneNum, address, Class } = req.body;
+    const { name, subject, phoneNum, address, Class, fileUrl } = req.body;
 
     const cur = new Teacher({
       name,
@@ -40,6 +41,7 @@ router.post(
       phoneNum,
       address,
       Class,
+      fileUrl,
     });
 
     try {
