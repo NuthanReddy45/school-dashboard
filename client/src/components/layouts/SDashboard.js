@@ -10,6 +10,7 @@ const Dashboard = ({
   address,
   Class,
   phoneNum,
+  ImageUrl,
 }) => {
   const { setStudentData, isAuth, setType } = useApp();
 
@@ -42,6 +43,11 @@ const Dashboard = ({
         <div className="card-body">
           <h4 className="card-title">{name}</h4>
           <p className="card-text">
+            <img
+              src={ImageUrl}
+              style={{ height: 200, width: 200 }}
+              className="rounded float-right"
+            />
             {rollNum && <small className="text-muted">{rollNum}</small>}
             {fatherName && <small className="text-muted">{fatherName}</small>}
           </p>

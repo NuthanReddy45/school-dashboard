@@ -7,9 +7,8 @@ import { useApp } from "../contexts/AppContext";
 const TeacherForm = () => {
   const [formData, setFormData] = useState({
     name: "",
-    rollNum: "",
     phoneNum: "",
-    fatherName: "",
+    subject: "",
     address: "",
     Class: "",
   });
@@ -77,10 +76,6 @@ const TeacherForm = () => {
   return (
     <>
       {Msg &&
-        // setTimeout(() => {
-        //   setMsg(null);
-        // }, 5000)
-
         Msg.map((cur) => {
           return <Alert {...cur} id={Math.floor(Math.random() * 100)} />;
         })}

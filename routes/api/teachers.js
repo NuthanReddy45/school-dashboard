@@ -35,13 +35,15 @@ router.post(
 
     const { name, subject, phoneNum, address, Class, fileUrl } = req.body;
 
+    ImageUrl = fileUrl;
+
     const cur = new Teacher({
       name,
       subject,
       phoneNum,
       address,
       Class,
-      fileUrl,
+      ImageUrl,
     });
 
     try {

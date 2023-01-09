@@ -2,7 +2,15 @@ import axios from "axios";
 import React, { Fragment } from "react";
 import { useApp } from "../../contexts/AppContext";
 
-const TDashboard = ({ name, _id, subject, address, Class, phoneNum }) => {
+const TDashboard = ({
+  name,
+  _id,
+  subject,
+  address,
+  Class,
+  phoneNum,
+  ImageUrl,
+}) => {
   const { setTeacherData, isAuth } = useApp();
 
   const DeleteItem = async () => {
@@ -29,6 +37,11 @@ const TDashboard = ({ name, _id, subject, address, Class, phoneNum }) => {
         <div className="card-body">
           <h4 className="card-title">{name}</h4>
           <p className="card-text">
+            <img
+              src={ImageUrl}
+              style={{ height: 200, width: 200 }}
+              className="rounded float-right"
+            />
             {subject && <small className="text-muted">{subject}</small>}
           </p>
           <p className="card-text">
