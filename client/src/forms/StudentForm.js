@@ -160,7 +160,6 @@ const StudentForm = () => {
             />
           </div>
           <br></br>
-
           <input type="submit" className="btn btn-primary" value="Submit" />
         </form>
       </section>
