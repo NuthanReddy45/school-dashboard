@@ -9,7 +9,7 @@ const StudentSchema = new mongoose.Schema({
   },
   rollNum: {
     type: Number,
-    // required: true,
+    required: true,
   },
   fatherName: {
     type: String,
