@@ -6,10 +6,10 @@ const mongoose = require("mongoose");
 const Result = require("../../models/results");
 const { check, validationResult } = require("express-validator");
 
-router.get("/:roll", auth, async (req, res) => {
-  const filter = req.params.id;
+router.get("/:roll", async (req, res) => {
+  const gg = req.params.roll;
   try {
-    let resp = await Result.find({ rollNo: filter });
+    let resp = await Result.find({ rollNo: gg });
     res.json(resp);
   } catch (err) {
     console.log("error fetching result ", err);
@@ -19,30 +19,50 @@ router.get("/:roll", auth, async (req, res) => {
 
 router.post(
   "/",
-  [check("rollNo", "Please include a Valid RollNo").notEmpty(), auth],
+  //   [check("rollNo", "Please include a Valid RollNo").notEmpty(),auth],
+  [check("rollNum", "Please include a Valid RollNo").notEmpty()],
   async (req, res) => {
-    console.log("in api  0");
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { name, rollNum, fatherName, phoneNum, address, Class, fileUrl } =
-      req.body;
-    console.log("in api  ", fileUrl);
+    const { semesterRes, rollNum } = req.body;
+
+    const tempRes = [semesterRes];
     const temp = {
-      name: name ? name : "",
-      rollNum: rollNum ? rollNum : "",
-      fatherName: fatherName ? fatherName : "",
-      phoneNum: phoneNum ? phoneNum : "",
-      address: address ? address : "",
-      Class: Class ? Class : "",
-      ImageUrl: fileUrl ? fileUrl : "",
+      semRes: tempRes,
+      rollNo: rollNum,
     };
 
     try {
-      console.log(temp);
-      const cur = new Student(temp);
+      mongoose.set("strictQuery", true);
+      const ans = await Result.find({ rollNo: rollNum });
+      if (ans.length > 0) {
+        const xy = ans[0];
+
+        let key = 0;
+
+        xy.semRes.forEach((sems, index) => {
+          if (sems.semNo == semesterRes.semNo) {
+            xy.semRes[index] = semesterRes;
+            key = 1;
+          }
+        });
+
+        if (key) {
+          await xy.save();
+          console.log("edited yeppi");
+          return res.json(xy);
+        }
+
+        xy.semRes.push(semesterRes);
+        await xy.save();
+        return res.json(xy);
+      }
+
+      console.log("GG boi ", temp);
+      const cur = new Result(temp);
       await cur.save();
       return res.json(cur);
     } catch (err) {
@@ -51,39 +71,6 @@ router.post(
     }
   }
 );
-router.post("/:id", auth, async (req, res) => {
-  const { name, rollNum, fatherName, phoneNum, address, Class } = req.body;
-  const temp = {};
-  if (name) temp.name = name;
-  if (rollNum) temp.rollNum = rollNum;
-  if (fatherName) temp.fatherName = fatherName;
-  if (phoneNum) temp.phoneNum = phoneNum;
-  if (address) temp.address = address;
-  if (Class) temp.Class = Class;
-
-  const id = req.params.id;
-
-  let ans = mongoose.isValidObjectId(id);
-  console.log(ans);
-
-  try {
-    let response = await Student.findById(id);
-
-    if (response) {
-      response = await Student.findOneAndUpdate(
-        { user_id: id },
-        { $set: temp },
-        { new: true }
-      );
-      return res.json(response);
-    }
-    console.log("not found");
-    return res.send("bad request").status(400);
-  } catch (err) {
-    console.log("error posting  students ", err);
-    return res.status(500).send("error in posting students");
-  }
-});
 
 router.delete("/:id", auth, async (req, res) => {
   const id = req.params.id;

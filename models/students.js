@@ -7,6 +7,22 @@ const StudentSchema = new mongoose.Schema({
     type: String,
     // required: true,
   },
+  branch: {
+    type: String,
+    // required: true,
+  },
+  section: {
+    type: String,
+    // required: true,
+  },
+  email1: {
+    type: String,
+    // required: true,
+  },
+  email2: {
+    type: String,
+    // required: true,
+  },
   rollNum: {
     type: Number,
     required: true,
@@ -23,7 +39,7 @@ const StudentSchema = new mongoose.Schema({
     type: String,
     // required: true,
   },
-  Class: {
+  dob: {
     type: Number,
     // required: true,
   },
